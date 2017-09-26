@@ -83,7 +83,7 @@ endfunction
 function! s:make_command(command)
     let cmd = a:command
     let cursor_linenr = get(a:000, 0, line('.'))
-    let vimfiler = vimfiler#get_current_vimfiler()
+    let vimfiler = b:vimfiler
     let sep = has('win32') ? ' &' : ';'
     " 別プロセスで実行するかどうか(windowsはどちらにしても別プロセスだから無視)
     let is_bgrun = stridx(cmd, '&') != -1 && !has('win32')
@@ -92,9 +92,9 @@ function! s:make_command(command)
 
     " マークされているファイルリストを取得
     " マークがない場合はカーソルのあたっているファイルを選択
-    let marked_files = vimfiler#get_marked_files()
+    let marked_files = vimfiler#get_marked_files(vimfiler)
     if empty(marked_files)
-        let marked_files = [ vimfiler#get_file(cursor_linenr) ]
+        let marked_files = [ vimfiler#get_file(vimfiler, cursor_linenr) ]
     endif
 
     if stridx(cmd, '%*') != -1 || stridx(cmd, '%#') != -1
